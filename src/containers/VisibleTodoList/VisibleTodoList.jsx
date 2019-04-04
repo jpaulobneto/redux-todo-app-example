@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export const TodoList = connect(
+export const VisibleTodoList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Component);
