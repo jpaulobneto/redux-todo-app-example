@@ -4,9 +4,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { PageNotFound } from '../PageNotFound/PageNotFound';
 import { TodoApp } from '../TodoApp/TodoApp';
-import { fetchTodos } from '../../api';
-
-fetchTodos('all').then(todos => console.log(todos));
 
 export const Root = ({ store }) => (
   <Provider store={store}>
