@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { PageNotFound } from '../PageNotFound/PageNotFound';
-import { TodoListApp } from '../TodoListApp/TodoListApp';
+import { TodoApp } from '../TodoApp/TodoApp';
 
 export const Root = ({ store }) => (
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/:filter?" component={TodoListApp} />
+        <Route exact path="/:filter?" component={TodoApp} />
         <Route component={PageNotFound} />
       </Switch>
     </Router>
