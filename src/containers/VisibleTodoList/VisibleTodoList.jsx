@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { TodoList } from '../../components/TodoList/TodoList';
-import { toggleTodo, receiveTodos } from '../../actionCreators';
+import * as actions from '../../actionCreators';
 import { getVisibleTodos } from '../../rootReducer';
 import { fetchTodos } from '../../api';
 
@@ -17,7 +17,8 @@ function TodoListWrapper(props) {
     fetchData();
   }, [props.filter]);
 
-  return <TodoList {...props} />;
+  const { toggleTodo, ...rest } = props;
+  return <TodoList {...rest} onTodoClick={toggleTodo} />;
 }
 
 TodoListWrapper.propTypes = {
@@ -33,6 +34,6 @@ const mapStateToProps = (state, { match }) => {
 export const VisibleTodoList = withRouter(
   connect(
     mapStateToProps,
-    { onTodoClick: toggleTodo, receiveTodos },
+    actions,
   )(TodoListWrapper),
 );
