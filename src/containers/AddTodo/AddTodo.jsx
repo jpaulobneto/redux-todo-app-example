@@ -13,9 +13,15 @@ const AddTodoComponent = ({ dispatch }) => {
         ref={(node) => {
           input = node;
         }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && input.value !== '') {
+            dispatch(addTodo(input.value));
+            input.value = '';
+          }
+        }}
       />
       <Button
-        bsStyle="primary"
+        variant="primary"
         onClick={() => {
           dispatch(addTodo(input.value));
           input.value = '';
