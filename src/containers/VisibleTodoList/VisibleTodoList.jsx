@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { TodoList } from '../../components/TodoList/TodoList';
@@ -6,25 +7,19 @@ import { toggleTodo } from '../../actionCreators';
 import { getVisibleTodos } from '../../rootReducer';
 import { fetchTodos } from '../../api';
 
-class TodoListWrapper extends Component {
-  componentDidMount() {
-    this.fetchData();
-  }
+function TodoListWrapper(props) {
+  const fetchData = filter => fetchTodos(filter).then(todos => console.log(filter, todos));
 
-  componentDidUpdate(prevProps) {
-    if (this.props.filter !== prevProps.filter) {
-      this.fetchData();
-    }
-  }
+  useEffect(() => {
+    fetchData(props.filter);
+  }, [props.filter]);
 
-  fetchData() {
-    fetchTodos(this.props.filter).then(todos => console.log(this.props.filter, todos));
-  }
-
-  render() {
-    return <TodoList {...this.props} />;
-  }
+  return <TodoList {...props} />;
 }
+
+TodoListWrapper.propTypes = {
+  filter: PropTypes.string.isRequired,
+};
 
 const mapStateToProps = (state, { match }) => {
   const filter = match.params.filter || 'all';
