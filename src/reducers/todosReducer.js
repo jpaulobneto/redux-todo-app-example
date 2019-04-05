@@ -5,13 +5,13 @@ const byId = (state = {}, action) => {
   const { payload = {} } = action;
   switch (action.type) {
     case RECEIVE_TODOS:
-      const nextState = { ...state };
-
-      payload.response.forEach((todoItem) => {
-        nextState[todoItem.id] = todoItem;
-      });
-
-      return nextState;
+      return payload.response.reduce(
+        (nextState, responseItem) => {
+          nextState[responseItem.id] = responseItem;
+          return nextState;
+        },
+        { ...state },
+      );
     default:
       return state;
   }
