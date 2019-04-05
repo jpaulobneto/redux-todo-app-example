@@ -8,8 +8,7 @@ import { getVisibleTodos, getIsFetching } from '../../rootReducer';
 
 function TodoListWrapper(props) {
   const fetchData = () => {
-    const { filter, fetchTodos, requestTodos } = props;
-    requestTodos(filter);
+    const { filter, fetchTodos } = props;
     fetchTodos(filter);
   };
 
@@ -30,7 +29,6 @@ TodoListWrapper.propTypes = {
   filter: PropTypes.string.isRequired,
   fetchTodos: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
-  requestTodos: PropTypes.func.isRequired,
   todos: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   toggleTodo: PropTypes.func.isRequired,
 };

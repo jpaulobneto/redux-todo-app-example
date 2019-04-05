@@ -4,7 +4,7 @@ import {
 } from './actionTypes';
 import * as api from './api';
 
-export const requestTodos = filter => ({
+const requestTodos = filter => ({
   type: REQUEST_TODOS,
   payload: { filter },
 });
@@ -14,9 +14,10 @@ const receiveTodos = (filter, response) => ({
   payload: { filter, response },
 });
 
-export function fetchTodos(filter) {
-  return api.fetchTodos(filter).then(response => receiveTodos(filter, response));
-}
+export const fetchTodos = filter => (dispatch) => {
+  dispatch(requestTodos(filter));
+  return api.fetchTodos(filter).then(response => dispatch(receiveTodos(filter, response)));
+};
 
 export const addTodo = text => ({
   type: ADD_TODO,
