@@ -1,48 +1,73 @@
 import { combineReducers } from 'redux';
-import { ADD_TODO, TOGGLE_TODO } from '../actionTypes';
-import { todo } from './todoReducer';
+import { RECEIVE_TODOS } from '../actionTypes';
 
 const byId = (state = {}, action) => {
-  const { payload } = action;
+  const { payload = {} } = action;
   switch (action.type) {
-    case ADD_TODO:
-    case TOGGLE_TODO:
-      return {
-        ...state,
-        [payload.id]: todo(state[payload.id], action),
-      };
+    case RECEIVE_TODOS:
+      const nextState = { ...state };
+
+      payload.response.forEach((todoItem) => {
+        nextState[todoItem.id] = todoItem;
+      });
+
+      return nextState;
     default:
       return state;
   }
 };
 
 const allIds = (state = [], action) => {
-  const { payload } = action;
+  const { payload = {} } = action;
+  if (payload.filter !== 'all') {
+    return state;
+  }
   switch (action.type) {
-    case ADD_TODO:
-      return [...state, payload.id];
+    case RECEIVE_TODOS:
+      return payload.response.map(todoItem => todoItem.id);
     default:
       return state;
   }
 };
 
-export const todos = combineReducers({
-  byId,
-  allIds,
+const activeIds = (state = [], action) => {
+  const { payload = {} } = action;
+  if (payload.filter !== 'active') {
+    return state;
+  }
+  switch (action.type) {
+    case RECEIVE_TODOS:
+      return payload.response.map(todoItem => todoItem.id);
+    default:
+      return state;
+  }
+};
+
+const completedIds = (state = [], action) => {
+  const { payload = {} } = action;
+  if (payload.filter !== 'completed') {
+    return state;
+  }
+  switch (action.type) {
+    case RECEIVE_TODOS:
+      return payload.response.map(todoItem => todoItem.id);
+    default:
+      return state;
+  }
+};
+
+const idsByFilter = combineReducers({
+  all: allIds,
+  active: activeIds,
+  completed: completedIds,
 });
 
-const getAllTodos = state => state.allIds.map(id => state.byId[id]);
+export const todos = combineReducers({
+  byId,
+  idsByFilter,
+});
 
 export const getVisibleTodos = (state, filter) => {
-  const allTodos = getAllTodos(state);
-  switch (filter) {
-    case 'all':
-      return allTodos;
-    case 'completed':
-      return allTodos.filter(todoState => todoState.completed);
-    case 'active':
-      return allTodos.filter(todoState => !todoState.completed);
-    default:
-      throw new Error(`Unknown filter ${filter}`);
-  }
+  const ids = state.idsByFilter[filter];
+  return ids.map(id => state.byId[id]);
 };
