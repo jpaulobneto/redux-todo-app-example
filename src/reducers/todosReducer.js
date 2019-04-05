@@ -1,73 +1,26 @@
 import { combineReducers } from 'redux';
-import { RECEIVE_TODOS } from '../actionTypes';
+import byId, * as fromById from './byId';
+import createList, * as fromList from './createList';
 
-const byId = (state = {}, action) => {
-  const { payload = {} } = action;
-  switch (action.type) {
-    case RECEIVE_TODOS:
-      return payload.response.reduce(
-        (nextState, responseItem) => {
-          nextState[responseItem.id] = responseItem;
-          return nextState;
-        },
-        { ...state },
-      );
-    default:
-      return state;
-  }
-};
-
-const allIds = (state = [], action) => {
-  const { payload = {} } = action;
-  if (payload.filter !== 'all') {
-    return state;
-  }
-  switch (action.type) {
-    case RECEIVE_TODOS:
-      return payload.response.map(todoItem => todoItem.id);
-    default:
-      return state;
-  }
-};
-
-const activeIds = (state = [], action) => {
-  const { payload = {} } = action;
-  if (payload.filter !== 'active') {
-    return state;
-  }
-  switch (action.type) {
-    case RECEIVE_TODOS:
-      return payload.response.map(todoItem => todoItem.id);
-    default:
-      return state;
-  }
-};
-
-const completedIds = (state = [], action) => {
-  const { payload = {} } = action;
-  if (payload.filter !== 'completed') {
-    return state;
-  }
-  switch (action.type) {
-    case RECEIVE_TODOS:
-      return payload.response.map(todoItem => todoItem.id);
-    default:
-      return state;
-  }
-};
-
-const idsByFilter = combineReducers({
-  all: allIds,
-  active: activeIds,
-  completed: completedIds,
+const listByFilter = combineReducers({
+  all: createList('all'),
+  active: createList('active'),
+  completed: createList('completed'),
 });
 
 export const todos = combineReducers({
   byId,
-  idsByFilter,
+  listByFilter,
 });
 
+/**
+ * Because listByFilter is defined in this file, the getVisibleTodos selector can make assumptions
+ * about it state shape and access the listByFilter directly. However, the implementation of
+ * createList is in a separate file. So this is why it uses the fromList.getIds selector to
+ * get ids from it. This lets you change the state stored by the reducers, without having to change
+ * the components or your tests, if you use the selectors to get the reducers in your tests.
+ */
 export const getVisibleTodos = (state, filter) => {
-  const ids = state.idsByFilter[filter];
-  return ids.map(id => state.byId[id]);
+  const ids = fromList.getIds(state.listByFilter[filter]);
+  return ids.map(id => fromById.getTodo(state.byId, id));
 };
