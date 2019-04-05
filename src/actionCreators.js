@@ -3,6 +3,7 @@ import {
   ADD_TODO, RECEIVE_TODOS, TOGGLE_TODO, REQUEST_TODOS,
 } from './actionTypes';
 import * as api from './api';
+import { getIsFetching } from './rootReducer';
 
 const requestTodos = filter => ({
   type: REQUEST_TODOS,
@@ -14,7 +15,11 @@ const receiveTodos = (filter, response) => ({
   payload: { filter, response },
 });
 
-export const fetchTodos = filter => (dispatch) => {
+export const fetchTodos = filter => (dispatch, getState) => {
+  if (getIsFetching(getState(), filter)) {
+    return Promise.resolve();
+  }
+
   dispatch(requestTodos(filter));
   return api.fetchTodos(filter).then(response => dispatch(receiveTodos(filter, response)));
 };

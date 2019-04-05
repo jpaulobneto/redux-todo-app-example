@@ -1,8 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import { rootReducer } from '../../rootReducer';
-
-const thunk = store => next => action => (typeof action === 'function' ? action(store.dispatch) : next(action));
 
 export const configureStore = () => {
   const middlewares = [thunk];

@@ -9,7 +9,7 @@ import { getVisibleTodos, getIsFetching } from '../../rootReducer';
 function TodoListWrapper(props) {
   const fetchData = () => {
     const { filter, fetchTodos } = props;
-    fetchTodos(filter);
+    fetchTodos(filter).then(() => console.log('done!'));
   };
 
   useEffect(() => {
