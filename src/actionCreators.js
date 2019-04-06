@@ -5,7 +5,7 @@ import {
   FETCH_TODOS_FAILURE,
   FETCH_TODOS_REQUEST,
   FETCH_TODOS_SUCCESS,
-  TOGGLE_TODO,
+  TOGGLE_TODO_SUCCESS,
 } from './actionTypes';
 import * as api from './api';
 import { getIsFetching } from './rootReducer';
@@ -40,9 +40,7 @@ export const addTodo = text => dispatch => api.addTodo(text).then(response => di
   payload: { response: normalize(response, schema.todo) },
 }));
 
-export const toggleTodo = id => ({
-  type: TOGGLE_TODO,
-  payload: {
-    id,
-  },
-});
+export const toggleTodo = id => dispatch => api.toggleTodo(id).then(response => dispatch({
+  type: TOGGLE_TODO_SUCCESS,
+  payload: { response: normalize(response, schema.todo) },
+}));
