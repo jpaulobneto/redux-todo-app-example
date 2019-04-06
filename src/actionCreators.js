@@ -1,6 +1,9 @@
-import { v4 } from 'uuid';
 import {
-  ADD_TODO, FETCH_TODOS_FAILURE, FETCH_TODOS_REQUEST, FETCH_TODOS_SUCCESS, TOGGLE_TODO,
+  ADD_TODO_SUCCESS,
+  FETCH_TODOS_FAILURE,
+  FETCH_TODOS_REQUEST,
+  FETCH_TODOS_SUCCESS,
+  TOGGLE_TODO,
 } from './actionTypes';
 import * as api from './api';
 import { getIsFetching } from './rootReducer';
@@ -30,13 +33,10 @@ export const fetchTodos = filter => (dispatch, getState) => {
   );
 };
 
-export const addTodo = text => ({
-  type: ADD_TODO,
-  payload: {
-    id: v4(),
-    text,
-  },
-});
+export const addTodo = text => dispatch => api.addTodo(text).then(response => dispatch({
+  type: ADD_TODO_SUCCESS,
+  payload: { response },
+}));
 
 export const toggleTodo = id => ({
   type: TOGGLE_TODO,

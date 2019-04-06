@@ -1,4 +1,4 @@
-import { FETCH_TODOS_SUCCESS } from '../actionTypes';
+import { FETCH_TODOS_SUCCESS, ADD_TODO_SUCCESS } from '../actionTypes';
 
 const byId = (state = {}, action) => {
   const { payload = {} } = action;
@@ -11,6 +11,11 @@ const byId = (state = {}, action) => {
         },
         { ...state },
       );
+    case ADD_TODO_SUCCESS:
+      return {
+        ...state,
+        [payload.response.id]: payload.response,
+      };
     default:
       return state;
   }

@@ -1,15 +1,18 @@
 import { combineReducers } from 'redux';
-import { FETCH_TODOS_FAILURE, FETCH_TODOS_REQUEST, FETCH_TODOS_SUCCESS } from '../actionTypes';
+import { FETCH_TODOS_FAILURE, FETCH_TODOS_REQUEST, FETCH_TODOS_SUCCESS, ADD_TODO_SUCCESS } from '../actionTypes';
 
 const createList = (filter) => {
   const ids = (state = [], action) => {
     const { payload = {} } = action;
-    if (payload.filter !== filter) {
-      return state;
-    }
     switch (action.type) {
       case FETCH_TODOS_SUCCESS:
-        return payload.response.map(todoItem => todoItem.id);
+        return filter === payload.filter
+          ? payload.response.map(todoItem => todoItem.id)
+          : state;
+      case ADD_TODO_SUCCESS:
+        return filter !== 'completed'
+          ? [...state, payload.response.id]
+          : state;
       default:
         return state;
     }
