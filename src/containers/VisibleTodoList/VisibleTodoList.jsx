@@ -4,20 +4,26 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { TodoList } from '../../components/TodoList/TodoList';
 import * as actions from '../../actionCreators';
-import { getVisibleTodos, getIsFetching } from '../../rootReducer';
+import { getVisibleTodos, getIsFetching, getErrorMessage } from '../../rootReducer';
+import { FetchError } from '../../components/FetchError/FetchError';
 
 function TodoListWrapper(props) {
   const fetchData = () => {
     const { filter, fetchTodos } = props;
-    fetchTodos(filter).then(() => console.log('done!'));
+    fetchTodos(filter);
   };
 
   useEffect(() => {
     fetchData();
   }, [props.filter]);
 
-  const { toggleTodo, isFetching, todos } = props;
+  const {
+    isFetching, errorMessage, toggleTodo, todos,
+  } = props;
   if (isFetching && !todos.length) return <p>Loading...</p>;
+  if (errorMessage && !todos.length) {
+    return <FetchError message={errorMessage} onRetry={fetchData} />;
+  }
   return <TodoList todos={todos} onTodoClick={toggleTodo} />;
 }
 
@@ -38,6 +44,7 @@ const mapStateToProps = (state, { match }) => {
   return {
     todos: getVisibleTodos(state, filter),
     isFetching: getIsFetching(state, filter),
+    errorMessage: getErrorMessage(state, filter),
     filter,
   };
 };

@@ -1,27 +1,33 @@
 import { v4 } from 'uuid';
 import {
-  ADD_TODO, RECEIVE_TODOS, TOGGLE_TODO, REQUEST_TODOS,
+  ADD_TODO, FETCH_TODOS_FAILURE, FETCH_TODOS_REQUEST, FETCH_TODOS_SUCCESS, TOGGLE_TODO,
 } from './actionTypes';
 import * as api from './api';
 import { getIsFetching } from './rootReducer';
-
-const requestTodos = filter => ({
-  type: REQUEST_TODOS,
-  payload: { filter },
-});
-
-const receiveTodos = (filter, response) => ({
-  type: RECEIVE_TODOS,
-  payload: { filter, response },
-});
 
 export const fetchTodos = filter => (dispatch, getState) => {
   if (getIsFetching(getState(), filter)) {
     return Promise.resolve();
   }
 
-  dispatch(requestTodos(filter));
-  return api.fetchTodos(filter).then(response => dispatch(receiveTodos(filter, response)));
+  dispatch({
+    type: FETCH_TODOS_REQUEST,
+    payload: { filter },
+  });
+
+  /**
+   * Error callback is better than .catch to avoid catch internal errors from the success callback
+   */
+  return api.fetchTodos(filter).then(
+    response => dispatch({
+      type: FETCH_TODOS_SUCCESS,
+      payload: { filter, response },
+    }),
+    error => dispatch({
+      type: FETCH_TODOS_FAILURE,
+      payload: { filter, message: error.message || 'Something went wrong.' },
+    }),
+  );
 };
 
 export const addTodo = text => ({

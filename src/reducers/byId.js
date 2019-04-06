@@ -1,9 +1,9 @@
-import { RECEIVE_TODOS } from '../actionTypes';
+import { FETCH_TODOS_SUCCESS } from '../actionTypes';
 
 const byId = (state = {}, action) => {
   const { payload = {} } = action;
   switch (action.type) {
-    case RECEIVE_TODOS:
+    case FETCH_TODOS_SUCCESS:
       return payload.response.reduce(
         (nextState, responseItem) => {
           nextState[responseItem.id] = responseItem;
