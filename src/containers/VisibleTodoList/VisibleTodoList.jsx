@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Spinner, Card } from 'react-bootstrap';
 import { TodoList } from '../../components/TodoList/TodoList';
 import * as actions from '../../actionCreators';
 import { getVisibleTodos, getIsFetching, getErrorMessage } from '../../rootReducer';
@@ -20,7 +21,15 @@ function TodoListWrapper(props) {
   const {
     isFetching, errorMessage, toggleTodo, todos,
   } = props;
-  if (isFetching && !todos.length) return <p>Loading...</p>;
+  if (isFetching && !todos.length) {
+    return (
+      <Card.Body className="text-center">
+        <Spinner animation="grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </Card.Body>
+    );
+  }
   if (errorMessage && !todos.length) {
     return <FetchError message={errorMessage} onRetry={fetchData} />;
   }

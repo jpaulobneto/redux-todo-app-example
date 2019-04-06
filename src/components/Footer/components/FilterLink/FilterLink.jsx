@@ -6,6 +6,7 @@ export const FilterLink = ({ filter, children }) => (
   <NavLink
     exact
     to={`/${filter === 'all' ? '' : filter}`}
+    style={{ padding: '20px' }}
     activeStyle={{
       color: 'black',
       textDecoration: 'none',

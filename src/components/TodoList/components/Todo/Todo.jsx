@@ -3,16 +3,18 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListGroup } from 'react-bootstrap';
 
 export const Todo = ({ text, completed, onClick }) => (
-  <li
+  <ListGroup.Item
     onClick={onClick}
     style={{
+      cursor: 'pointer',
       textDecoration: completed ? 'line-through' : 'none',
     }}
   >
     {text}
-  </li>
+  </ListGroup.Item>
 );
 
 Todo.propTypes = {
