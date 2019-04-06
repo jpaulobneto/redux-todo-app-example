@@ -1,24 +1,13 @@
-import { FETCH_TODOS_SUCCESS, ADD_TODO_SUCCESS } from '../actionTypes';
-
 const byId = (state = {}, action) => {
   const { payload = {} } = action;
-  switch (action.type) {
-    case FETCH_TODOS_SUCCESS:
-      return payload.response.reduce(
-        (nextState, responseItem) => {
-          nextState[responseItem.id] = responseItem;
-          return nextState;
-        },
-        { ...state },
-      );
-    case ADD_TODO_SUCCESS:
-      return {
-        ...state,
-        [payload.response.id]: payload.response,
-      };
-    default:
-      return state;
+  if (payload.response) {
+    return {
+      ...state,
+      ...payload.response.entities.todos,
+    };
   }
+
+  return state;
 };
 
 export default byId;
