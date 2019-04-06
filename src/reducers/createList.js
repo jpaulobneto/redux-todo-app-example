@@ -13,8 +13,8 @@ const createList = (filter) => {
     const { result: toggledId, entities } = payload.response;
     const { completed } = entities.todos[toggledId];
     const shouldRemove = (
-      (completed && filter === 'active') ||
-      (!completed && filter === 'completed')
+      (completed && filter === 'active')
+      || (!completed && filter === 'completed')
     );
 
     return shouldRemove

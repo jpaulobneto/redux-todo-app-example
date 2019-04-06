@@ -9,14 +9,15 @@ import { getVisibleTodos, getIsFetching, getErrorMessage } from '../../rootReduc
 import { FetchError } from '../../components/FetchError/FetchError';
 
 function TodoListWrapper(props) {
+  const { filter, fetchTodos } = props;
+
   const fetchData = () => {
-    const { filter, fetchTodos } = props;
     fetchTodos(filter);
   };
 
   useEffect(() => {
     fetchData();
-  }, [props.filter]);
+  }, [filter]);
 
   const {
     isFetching, errorMessage, toggleTodo, todos,
@@ -37,10 +38,12 @@ function TodoListWrapper(props) {
 }
 
 TodoListWrapper.defaultProps = {
+  errorMessage: null,
   isFetching: false,
 };
 
 TodoListWrapper.propTypes = {
+  errorMessage: PropTypes.string,
   filter: PropTypes.string.isRequired,
   fetchTodos: PropTypes.func.isRequired,
   isFetching: PropTypes.bool,
